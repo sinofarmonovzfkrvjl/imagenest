@@ -36,4 +36,4 @@ def delete_file(filename):
 def file_url(filename):
     return send_from_directory("uploads", filename)
 
-app.run(debug=True)
+app.run(debug=True, host="0.0.0.0", port=5500)
