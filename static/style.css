@@ -5,6 +5,17 @@
     font-family: sans-serif;
 }
 
+.section {
+    background-color: #999;
+    padding: 10px;
+    border: 20px;
+}
+
+.section a {
+    color: black;
+    text-decoration: none;
+}
+
 .header {
     display: flex;
     justify-content: space-between;
