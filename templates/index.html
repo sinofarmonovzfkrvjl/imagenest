@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinterest</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+</head>
+<body>
+    <header>
+        <div class="header">
+            <div class="container">
+                <h1><a class="logo">Pinterest</a></h1>
+            </div>
+            <div class="section">
+                <a href="/upload">upload image</a>
+            </div>
+        </div>
+    </header>
+    <main>
+        {% if images %}
+            <div class="pinterest">
+                {% for image in images %}
+                    <a href="/uploads/{{ image }}/see"><img src="/uploads/{{ image }}/see/url" alt="nothing" width="400" height="600" style="object-fit: cover;"></a>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </main>
+</body>
+</html>
