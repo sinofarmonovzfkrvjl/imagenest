@@ -3,6 +3,9 @@ import os
 
 app = Flask(__name__)
 
+if not os.path.exists("uploads"):
+    os.makedirs("uploads")
+
 @app.route("/", methods=["GET", "POST"])
 def homepage():
     if request.method == "POST":
