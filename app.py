@@ -24,8 +24,9 @@ def upload():
 
 @app.route("/uploads/<filename>/see")
 def download_file(filename):
-    code = "<a href='/uploads/" + filename + "/see/url'><img src='/uploads/" + filename + "/see/url' alt='unable to upload'></a><br><br><a href='/upload/" + filename + "/delete'>delete the file</a>"
-    return render_template("see.html", code=code, file_name=filename)
+    code = "<a href='/uploads/" + filename + "/see/url'><img src='/uploads/" + filename + "/see/url' alt='unable to upload'></a>"
+    other_code = "<a href='/uploads/" + filename + "/see/url' download>Download</a><br><a href='/upload/" + filename + "/delete'>delete the file</a>"
+    return render_template("see.html", code=code, file_name=filename, other_code=other_code)
 
 @app.route("/upload/<filename>/delete")
 def delete_file(filename):
