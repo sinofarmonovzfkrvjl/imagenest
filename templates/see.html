@@ -4,11 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Imagenest | See The Image</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='see.css') }}">
 </head>
 <body>
-    {{ code|safe }}
-    <br><br><br>
-    <h1>{{ file_name }}</h1>
-    <h3>{{ other_code|safe }}</h3>
+    <div class="image-container">
+        <div class="container">
+            <div class="image">
+                {{ code|safe }}
+            </div>
+            <div class="text">
+                <h1>{{ file_name }}</h1>
+            </div>
+            <div class="buttons">
+                <h3>{{ other_code|safe }}</h3>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

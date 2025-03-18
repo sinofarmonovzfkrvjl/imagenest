@@ -1,0 +1,31 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+.image-container {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.image-container .container .image {
+    border: 1px solid gray;
+}
+
+.image-container .container h1 {
+    border: 1px solid gray;
+}
+
+.image-container .container .text {
+    text-align: center;
+}
+
+.image-container .container .buttons h3 {
+    border: 1px solid gray;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+}
