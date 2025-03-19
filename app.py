@@ -1,7 +1,17 @@
 from flask import Flask, render_template, request, send_from_directory, redirect
 import os
+from flask_cors import CORS
+from flask_wtf import FlaskForm
+from wtforms import FileField
 
 app = Flask(__name__)
+CORS(app)
+
+class ImageForm(FlaskForm):
+    image = FileField("image")
+
+app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config["SECRET_KEY"] = "secret_key"
 
 if not os.path.exists("uploads"):
     os.makedirs("uploads")
@@ -20,7 +30,8 @@ def homepage():
 
 @app.route("/upload")
 def upload():
-    return render_template("upload.html")
+    form = ImageForm()
+    return render_template("upload.html", form=form)
 
 @app.route("/uploads/<filename>/see")
 def download_file(filename):
