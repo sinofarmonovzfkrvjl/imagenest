@@ -3,15 +3,50 @@ import os
 from flask_cors import CORS
 from flask_wtf import FlaskForm
 from wtforms import FileField
+from flask_sqlalchemy import SQLAlchemy
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+from flask_admin.form.upload import ImageUploadField
 
 app = Flask(__name__)
 CORS(app)
 
-class ImageForm(FlaskForm):
-    image = FileField("image")
-
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config["SECRET_KEY"] = "secret_key"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite3"
+app.config["UPLOAD_FOLDER"] = "uploads"
+
+db = SQLAlchemy(app)
+admin = Admin(app, endpoint="/zfkrvjl323", template_mode="bootstrap3")
+
+# Models
+
+class PostImage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=True)
+    image = db.Column(db.String(255), nullable=False)
+
+# Views
+
+class PostImageView(ModelView):
+    form_extra_fields = {
+        'image': ImageUploadField('image', base_path="uploads")
+    }
+
+    def on_model_delete(self, model):
+        print(model)
+        if model.image:
+            image_path = os.path.join(app.config['UPLOAD_FOLDER'], model.image)
+            if os.path.exists(image_path):
+                os.remove(image_path)
+
+admin.add_view(PostImageView(PostImage, db.session))
+
+with app.app_context():
+    db.create_all()
+
+class ImageForm(FlaskForm):
+    image = FileField("image")
 
 if not os.path.exists("uploads"):
     os.makedirs("uploads")
@@ -35,9 +70,9 @@ def upload():
 
 @app.route("/uploads/<filename>/see")
 def download_file(filename):
-    code = "<a class='img' href='/uploads/" + filename + "/see/url'><img src='/uploads/" + filename + "/see/url' alt='video or other file here'></a>"
-    other_code = "<a href='/uploads/" + filename + "/see/url' download>Download</a><br><a href='/upload/" + filename + "/delete'>delete the file</a>"
-    return render_template("see.html", code=code, file_name=filename, other_code=other_code)
+    image = PostImage.query.filter_by(image=filename).first()
+    print(image)
+    return render_template("see.html", image=image)
 
 @app.route("/upload/<filename>/delete")
 def delete_file(filename):

@@ -10,13 +10,10 @@
     <div class="image-container">
         <div class="container">
             <div class="image">
-                {{ code|safe }}
+                <img src="{{ url_for('file_url', filename=image.image) }}" width="500" style="object-fit: contain;" alt="image">
             </div>
             <div class="text">
-                <h1>{{ file_name }}</h1>
-            </div>
-            <div class="buttons">
-                <h3>{{ other_code|safe }}</h3>
+                <h1>{{ image.title }}</h1>
             </div>
         </div>
     </div>
