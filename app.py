@@ -52,7 +52,7 @@ if not os.path.exists("uploads"):
     os.makedirs("uploads")
 
 @app.route("/", methods=["GET", "POST"])
-def homepage():
+def Home():
     if request.method == "POST":
         if 'image' not in request.files:
             return "No file uploaded"
@@ -61,26 +61,17 @@ def homepage():
 
     images = os.listdir("uploads")
 
-    return render_template("index.html", images=images)
+    all_images = PostImage.query.all()
 
-@app.route("/upload")
-def upload():
-    form = ImageForm()
-    return render_template("upload.html", form=form)
+    return render_template("index.html", images=images, all_images=all_images)
 
-@app.route("/uploads/<filename>/see")
-def download_file(filename):
-    image = PostImage.query.filter_by(image=filename).first()
-    print(image)
+@app.route("/uploads/see/<int:image_id>")
+def send_image(image_id):
+    image = PostImage.query.get_or_404(image_id)
     return render_template("see.html", image=image)
 
-@app.route("/upload/<filename>/delete")
-def delete_file(filename):
-    os.remove(f"uploads/{filename}")
-    return redirect("/", code=302)
-
-@app.route("/uploads/<filename>/see/url")
-def file_url(filename):
-    return send_from_directory("uploads", filename)
+@app.route("/uploads/see/url/<image>")
+def image_url(image):
+    return send_from_directory("uploads", image)
 
 app.run(debug=True, host="0.0.0.0", port=5500)

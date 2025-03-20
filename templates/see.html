@@ -10,7 +10,7 @@
     <div class="image-container">
         <div class="container">
             <div class="image">
-                <img src="{{ url_for('file_url', filename=image.image) }}" width="500" style="object-fit: contain;" alt="image">
+                <img src="{{ url_for('image_url', image=image.image) }}" width="500" style="object-fit: contain;" alt="image">
             </div>
             <div class="text">
                 <h1>{{ image.title }}</h1>
