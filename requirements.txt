@@ -5,3 +5,4 @@ flask-admin
 flask-sqlalchemy
 flask-wtf
 pillow
+flask-login
