@@ -44,7 +44,6 @@ class PostImageView(ModelView):
     }
 
     def on_model_delete(self, model):
-        print(model)
         if model.image:
             image_path = os.path.join(app.config['UPLOAD_FOLDER'], model.image)
             if os.path.exists(image_path):
