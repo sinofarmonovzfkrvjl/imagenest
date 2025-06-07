@@ -2,12 +2,13 @@ from flask import Flask, render_template, request, send_from_directory, redirect
 import os
 from flask_cors import CORS
 from flask_wtf import FlaskForm
-from wtforms import FileField, StringField, PasswordField, SubmitField, validators
+from wtforms import FileField, StringField, PasswordField, SubmitField, validators, DateTimeField
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.form.upload import ImageUploadField
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user, UserMixin
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
@@ -57,6 +58,12 @@ class LoginForm(FlaskForm):
     password = PasswordField("password", validators=[validators.DataRequired()])
     submit = SubmitField("submit")
 
+class UploadForm(FlaskForm):
+    image = FileField("image", validators=[validators.DataRequired()])
+    title = StringField("title", validators=[validators.DataRequired()])
+    date_time = DateTimeField("date_time", validators=[validators.DataRequired()], default=datetime.now())
+    submit = SubmitField("submit")
+
 class ImageForm(FlaskForm):
     image = FileField("image", validators=[validators.DataRequired()])
 
@@ -81,11 +88,9 @@ def Home():
         file = request.files['image']
         file.save(f"uploads/{file.filename}")
 
-    images = os.listdir("uploads")
-
-    all_images = PostImage.query.all()
+    images = PostImage.query.all()
     
-    return render_template("index.html", images=images, all_images=all_images, user=current_user)
+    return render_template("index.html", images=images, user=current_user)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -103,6 +108,20 @@ def login():
         return redirect(url_for("Home"))
     return render_template("login.html", form=form)
 
+@app.route("/upload", methods=["GET", "POST"])
+@login_required
+def upload_image_page():
+    form = UploadForm()
+    if form.validate_on_submit():
+        title = form.title.data
+        image = form.image.data
+        image.save(f"uploads/{image.filename}")
+        image_path = PostImage(title=title, image=image.filename)
+        db.session.add(image_path)
+        db.session.commit()
+        return redirect(url_for("Home"))
+    return render_template("upload.html", form=form)
+
 @app.route("/logout")
 @login_required
 def logout():
@@ -115,9 +134,20 @@ def send_image(image_id):
     image = PostImage.query.get(image_id)
     return render_template("see.html", image=image)
 
-@app.route("/uploads/see/url/<image>")
-def image_url(image):
-    return send_from_directory("uploads", image)
+@app.route("/uploads/see/url/<id>")
+def image_url(id):
+    image = PostImage.query.get(id)
+    return send_from_directory("uploads", image.image)
+
+@app.route("/delete/<int:image_id>")
+@login_required
+def delete_image(image_id):
+    image = PostImage.query.get(image_id)
+    os.remove(f"uploads/{image.image}")
+    db.session.delete(image)
+    db.session.commit()
+    return redirect(url_for("Home"))
 
 
-app.run(debug=True, host="0.0.0.0", port=5500)
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=5500)

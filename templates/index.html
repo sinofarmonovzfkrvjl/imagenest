@@ -18,13 +18,16 @@
                     A image-sharing platform
                 </div>
             </div>
+            <div class="header-sections">
+                <a href="/upload">Upload video</a>
+            </div>
         </div>
     </header>
     <main>
         {% if images %}
             <div class="pinterest">
                 {% for image in images %}
-                    <a href="{{ url_for('send_image', image_id=all_images[images.index(image)].id) }}"><img src="/uploads/see/url/{{ image }}" alt="nothing" width="400" height="600" style="object-fit: cover;"></a>
+                    <a href="uploads/see/{{ image.id }}"><img src="/uploads/see/url/{{ image.id }}" width="400" height="600" style="object-fit: cover;" alt="nothing"></a>
                 {% endfor %}
             </div>
         {% endif %}

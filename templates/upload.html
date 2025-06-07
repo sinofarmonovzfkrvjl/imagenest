@@ -3,16 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Imagenest | Upload Images</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='upload.css') }}">
+    <title>Upload Your Image</title>
+    <style>
+        * {
+            font-family: sans-serif;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <form action="/" method="post" enctype="multipart/form-data">
-            {{ form.csrf_token }}
-            {{ form.image }}
-            <input type="submit" value="Upload" class="submit">
-        </form>
-    </div>
+    <form action="/upload" enctype="multipart/form-data" method="post">
+        {{ form.hidden_tag() }}
+        {{ form.image.label }}: {{ form.image }}<br>
+        {{ form.title.label }}: {{ form.title }}<br>
+        {{ form.submit() }}
+    </form>
 </body>
 </html>

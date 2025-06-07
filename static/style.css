@@ -47,3 +47,9 @@ header {
 .pinterest a {
     border: 1px solid #ccc;
 }
+
+.header-sections {
+    display: flex;
+    gap: 30px;
+    padding-right: 30px;
+}
